@@ -9,13 +9,15 @@ f = open("background.txt",'r')
 def printt(mario_x,mario_y):
 	for i in range(height-1):
 		if i < mario_x or i > mario_x + 2:
-			print(objects.background[i],end='')
+			for j in range(width):
+				print(objects.background[i][j],end='')
+			print('')
 		else:
 			for j in range(width):
 				if j < mario_y or j > mario_y + 6:
 					print(objects.background[i][j],end='')
 				else:
-					print(objects.mario_character[i-mario_x][j-mario_y],end='')
+					print(mario.art[i-mario_x][j-mario_y],end='')
 			print('')
 
 class _Getch:
@@ -58,17 +60,32 @@ def get_input(timeout=1):
     signal.signal(signal.SIGALRM, signal.SIG_IGN)
     return ''
 
+def rotate_background():
+	for i in range(height - 1):
+		objects.background[i] = objects.background[i][1 : width] + objects.background[i][0]
+		
+
 reset = True
-height = 30
+height = 29
 width = 85
-mario = Character(19,45,2)
+mario = Mario(20,0,2)
 max_right = 45
-objects = Objects(background, mario_character, f)
+background = []
+small_mario = []
+mario_character = []
+brick = []
+objects = Objects(background, small_mario, mario_character, brick, f)
 objects.make_background()
+objects.make_small_mario()
 objects.make_mario()
+objects.make_brick()
 cur_time = time.time()
  
 while reset:
+	if mario.life >= 2:
+		mario.art = objects.mario_character
+	else:
+		mario.art = objects.small_mario
 	# reset = False
 	os.system('tput reset')
 	printt(int(round(mario.x_pos)),int(round(mario.y_pos)))
@@ -78,25 +95,12 @@ while reset:
 	elif command == 'd':
 		mario.move_right()
 		if mario.y_pos == max_right:
-			for i in range(height - 1):
-				objects.background[i] = objects.background[i][width-1] + objects.background[i][0 : width-2]
+			rotate_background()
+			mario.distance_covered = mario.distance_covered + 1
 	elif command == 'a':
 		mario.move_left()
 	elif command == 'w':
 		mario.jump()
-
 	time_change = time.time() - cur_time
 	mario.position_update(time_change)
 	cur_time = time.time()
-		
-	# print(mario.vel)
-	# print(mario.x_pos)
-	# print(time_change)
-	# if mario.x_pos < 19:
-	# 	mario.x_pos = mario.vel * time_change + mario.vel * mario.x_pos + time_change / 2.0
-	# if mario.x_pos > 19:
-	# 	mario.x_pos = 19
-	# mario.vel = mario.vel + time_change
-	# if mario.x_pos == 19:
-	# 	mario.vel = 0
-	# print(mario.vel)
