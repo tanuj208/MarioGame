@@ -6,19 +6,22 @@ import math
 
 f = open("background.txt",'r')
 
-def printt(mario_x,mario_y):
-	for i in range(height-1):
+def printBoard(mario_x,mario_y):
+	for i in range(HEIGHT-1):
+		final_board.append('')
 		if i < mario_x or i > mario_x + 2:
-			for j in range(width):
-				print(objects.background[i][j],end='')
-			print('')
+			for j in range(WIDTH):
+				final_board[i] = arts.background[i]
 		else:
-			for j in range(width):
+			for j in range(WIDTH):
 				if j < mario_y or j > mario_y + 6:
-					print(objects.background[i][j],end='')
+					final_board[i]+=arts.background[i][j]
 				else:
-					print(mario.art[i-mario_x][j-mario_y],end='')
-			print('')
+					final_board[i]+=mario.art[i-mario_x][j-mario_y]
+	for i in range(HEIGHT - 1):
+		for j in range(WIDTH):
+			print(final_board[i][j],end='')
+		print()
 
 class _Getch:
 
@@ -61,46 +64,49 @@ def get_input(timeout=1):
     return ''
 
 def rotate_background():
-	for i in range(height - 1):
-		objects.background[i] = objects.background[i][1 : width] + objects.background[i][0]
+	for i in range(HEIGHT - 1):
+		arts.background[i] = arts.background[i][1 : WIDTH] + arts.background[i][0]
 		
 
-reset = True
-height = 29
-width = 85
+RESET = True
+HEIGHT = 29
+WIDTH = 85
+MAX_RIGHT = 45
 mario = Mario(20,0,2)
-max_right = 45
 background = []
 small_mario = []
 mario_character = []
 brick = []
-objects = Objects(background, small_mario, mario_character, brick, f)
-objects.make_background()
-objects.make_small_mario()
-objects.make_mario()
-objects.make_brick()
+final_board = []
+arts = Arts(background, small_mario, mario_character, brick, f)
+arts.make_background()
+arts.make_small_mario()
+arts.make_mario()
+arts.make_brick()
+basic_background = arts.background
 cur_time = time.time()
  
-while reset:
+while RESET:
 	if mario.life >= 2:
-		mario.art = objects.mario_character
+		mario.art = arts.mario_character
 	else:
-		mario.art = objects.small_mario
-	# reset = False
+		mario.art = arts.small_mario
+	# RESET = False
 	os.system('tput reset')
-	printt(int(round(mario.x_pos)),int(round(mario.y_pos)))
+	del final_board[:]
+	printBoard(int(round(mario.x_pos)),int(round(mario.y_pos)))
 	command = get_input()
 	if command == 'q':
 		break
 	elif command == 'd':
 		mario.move_right()
-		if mario.y_pos == max_right:
+		if mario.y_pos == MAX_RIGHT:
 			rotate_background()
 			mario.distance_covered = mario.distance_covered + 1
 	elif command == 'a':
 		mario.move_left()
 	elif command == 'w':
-		mario.jump()
+		mario.jump(arts.background)
 	time_change = time.time() - cur_time
-	mario.position_update(time_change)
+	mario.position_update(time_change,arts.background)
 	cur_time = time.time()

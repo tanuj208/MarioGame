@@ -1,7 +1,7 @@
 height = 29
 width = 85
 
-class Objects:
+class Arts:
 
 	def __init__(self, background, small_mario, mario_character, brick, f):
 		self.background = background
