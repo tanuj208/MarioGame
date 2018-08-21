@@ -5,19 +5,6 @@ ACCEL = 10
 GROUND_POS = 22
 MAX_RIGHT = 45
 MAX_LEFT = 0
-MARIO_WIDTH = 8
-MARIO_HEIGHT = 3
-
-def tangible(final_background, x_pos, y_pos):
-	for i in range(x_pos, x_pos + MARIO_HEIGHT - 1):
-		s = final_background[min(i, GROUND_POS)][y_pos : min(y_pos + MARIO_WIDTH - 1, MAX_RIGHT + 10)]
-		print(s)
-		if '|' in s or '_' in s:
-			return False
-	s = final_background[min(x_pos + MARIO_HEIGHT - 1, GROUND_POS)][y_pos : min(y_pos + MARIO_WIDTH - 1, MAX_RIGHT + 10)]
-	if '|' in s:
-		return False
-	return True
 
 class Character:
 	def __init__(self,x,y,life, art):
@@ -28,10 +15,20 @@ class Character:
 		self.distance_covered = 0
 		self.art = art
 
+	def collision(self, final_background, x, y):
+		for i in range(x, x + len(self.art) - 1):
+			s = final_background[min(i, GROUND_POS)][y : min(y + len(self.art[0]) - 1, MAX_RIGHT + 10)]
+			if '|' in s or '_' in s:
+				return False
+		s = final_background[min(x + len(self.art) - 1, GROUND_POS)][y : min(y + len(self.art[0]) - 1, MAX_RIGHT + 10)]
+		if '|' in s:
+			return False
+		return True
+
 	def move_right(self, final_background):
 		rounded_x=int(round(self.x_pos))
 		rounded_y=int(round(self.y_pos))
-		if tangible(final_background, rounded_x, rounded_y + STANDARD_MOVE):
+		if self.collision(final_background, rounded_x, rounded_y + STANDARD_MOVE):
 			self.y_pos = min(self.y_pos + STANDARD_MOVE, MAX_RIGHT)
 			return False
 		return True
@@ -39,7 +36,7 @@ class Character:
 	def move_left(self, final_background):
 		rounded_x=int(round(self.x_pos))
 		rounded_y=int(round(self.y_pos))
-		if tangible(final_background, rounded_x, max(MAX_LEFT, rounded_y - STANDARD_MOVE)):
+		if self.collision(final_background, rounded_x, max(MAX_LEFT, rounded_y - STANDARD_MOVE)):
 			self.y_pos = max(self.y_pos - STANDARD_MOVE, MAX_LEFT)
 
 	def jump(self,final_background):
@@ -55,7 +52,7 @@ class Character:
 			self.vel = 0
 		else:
 			changed_x = int(round(self.x_pos + (self.vel * time_change) + (ACCEL * time_change * time_change * 0.5)))
-			if tangible(final_background, changed_x, rounded_y):
+			if self.collision(final_background, changed_x, rounded_y):
 				self.x_pos = self.x_pos + (self.vel * time_change) + (ACCEL * time_change * time_change * 0.5)
 				self.vel = self.vel + ACCEL * time_change
 		if self.x_pos >= GROUND_POS:

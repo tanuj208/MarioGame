@@ -39,8 +39,8 @@ arts.make_bumba()
 mario = Mario(20, 0, 2, arts.mario_character)
 cur_time = time.time()
 enemies = []
-# en = Enemy(22, 20, 1, 1, 1, arts.bumba)
-# enemies.append(en)
+en = Enemy(22, 20, 1, 0.5, 1, arts.bumba)
+enemies.append(en)
 
 while RESET:
 	if mario.life >= 2:
