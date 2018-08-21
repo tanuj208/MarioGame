@@ -10,12 +10,18 @@ SCREEN_WIDTH = 85
 MAX_RIGHT = 45
 for i in range(HEIGHT):
     background.append(list(f.readline()))
+f.close()
+
+f = open("enemies.txt",'w+')
+f.write('')
+f.close()
 
 valid_inputs = ['b', 'p', 'g', 's', 'e', 'q']
 direction_inputs = ['w', 'a', 's', 'd', 'q']
 
 x_cor = 0
 y_cor = 0
+flag = 0
 
 def printt(object_ascii, x, y):
     final_background = copy.deepcopy(background)
@@ -39,6 +45,11 @@ while True:
 
     if x == 'q':
         name = input()
+        if flag == 1:
+            f = open("enemies.txt",'a')
+            f.write(str(x_cor)+'\n')
+            f.write(str(y_cor)+'\n')
+            f.close()
         f = open(name, "w+")
         final = []
         for i in range(HEIGHT):
@@ -54,21 +65,26 @@ while True:
     object_ascii = []
 
     if x == 'b':
+        flag = 0
         f = open("brick.txt", 'r')
         for i in range(2):
             object_ascii.append(list(f.readline()))
     elif x == 'p':
+        flag = 0
         f = open("pit.txt", 'r')
         for i in range(3):
             object_ascii.append(list(f.readline()))
     elif x == 'g':
+        flag = 0
         f = open("groundObject.txt", 'r')
         for i in range(3):
             object_ascii.append(list(f.readline()))
     elif x == 's':
+        flag = 0
         f = open("spring.txt", 'r')
         object_ascii.append(list(f.readline()))
     elif x == 'e':
+        flag = 1
         f = open("bumba.txt", 'r')
         object_ascii.append(list(f.readline()))
 

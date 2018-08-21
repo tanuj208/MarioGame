@@ -1,57 +1,38 @@
 import sys, termios, tty, os, time, datetime, random, colorama as cl, numpy as np
+import copy
 from characters import *
 from ascii import *
 from input import *
 import math
 
 
-f = open("background.txt",'r')
+f = open("b.txt",'r')
 
-def printBoard(mario_x,mario_y):
-	final_board = []
-	for i in range(HEIGHT-1):
-		final_board.append(arts.background[i])
-	# 	if i < mario_x or i > mario_x + 2:
-	# 		for j in range(WIDTH):
-	# 			final_board[i] = arts.background[i]
-	# 	else:
-	# 		for j in range(WIDTH):
-	# 			if j < mario_y or j > mario_y + 6:
-	# 				final_board[i]+=arts.background[i][j]	
-	# 			else:
-	# 				final_board[i]+=mario.art[i-mario_x][j-mario_y]
-	# final = []
+def printBoard():
+	final_board = copy.deepcopy(arts.background)
 	for i in range(len(mario.art)):
-		for j in range(len(mario.art[i])):
-			final_board[mario_x + i][mario_y + j] = mario.art[i][j]
+		for j in range(len(mario.art[i]) - 1):
+			final_board[int(round(mario.x_pos)) + i][int(round(mario.y_pos)) + j + mario.distance_covered] = mario.art[i][j]
+
+	for k in range(len(enemies)):
+		for i in range(len(enemies[k].art)):
+			for j in range(len(enemies[k].art[i]) - 1):
+				final_board[enemies[k].x_pos + i][enemies[k].y_pos + j] = enemies[k].art[i][j]
 
 	for i in range(HEIGHT - 1):
-		final.append(list(final_board[i]))
-	
-	for i in range(HEIGHT - 1):
-		for j in range(WIDTH):
-			if enemies[0].x_pos == i and (enemies[0].y_pos == j or enemies[0].y_pos == j - 1 or enemies[0].y_pos == j - 2 or enemies[0].y_pos == j - 3):
-				final[i][j] = enemies[0].art[0][j - enemies[0].y_pos]
-	for i in range(HEIGHT - 1):
-		for j in range(WIDTH):
-			print(final[i][j],end='')
+		for j in range(SCREEN_WIDTH):
+			print(final_board[i][j + mario.distance_covered],end='')
 		print('')
 	return final_board
 
-def rotate_background():
-	for i in range(HEIGHT - 1):
-		arts.background[i] = arts.background[i][1 : WIDTH] + arts.background[i][0]
-		
+levelName = "b.txt"
 RESET = True
 HEIGHT = 29
-WIDTH = 85
+SCREEN_WIDTH = 85
+WIDTH = 510
 MAX_RIGHT = 45
-background = []
-small_mario = []
-mario_character = []
-bumba = []
-arts = Arts(background, small_mario, mario_character, bumba, f)
-arts.make_background()
+arts = Arts()
+arts.make_background(levelName)
 arts.make_small_mario()
 arts.make_mario()
 arts.make_bumba()
@@ -68,7 +49,7 @@ while RESET:
 		mario.change_art(arts.small_mario)
 	# RESET = False
 	os.system('tput reset')
-	final_board = printBoard(int(round(mario.x_pos)),int(round(mario.y_pos)))
+	final_board = printBoard()
 	for i in range(len(enemies)):
 		en = enemies[i]
 		en.move(arts.background)
@@ -78,7 +59,6 @@ while RESET:
 	elif command == 'd':
 		blocked = mario.move_right(arts.background)
 		if not blocked and mario.y_pos == MAX_RIGHT:
-			rotate_background()
 			mario.distance_covered = mario.distance_covered + 1
 	elif command == 'a':
 		mario.move_left(arts.background)
