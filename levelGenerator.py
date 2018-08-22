@@ -2,7 +2,7 @@ import os
 import copy
 from input import *
 
-f = open("b.txt",'r')
+f = open("background.txt",'r')
 background = []
 HEIGHT = 28
 WIDTH = 510
@@ -16,7 +16,7 @@ f = open("enemies.txt",'w+')
 f.write('')
 f.close()
 
-valid_inputs = ['b', 'p', 'g', 's', 'e', 'q']
+valid_inputs = ['b', 'p', 'g', 's', 'e', 'q', 'c']
 direction_inputs = ['w', 'a', 's', 'd', 'q']
 
 x_cor = 0
@@ -70,7 +70,7 @@ while True:
     elif x == 'p':
         flag = 0
         f = open("pit.txt", 'r')
-        for i in range(3):
+        for i in range(6):
             object_ascii.append(list(f.readline()))
     elif x == 'g':
         flag = 0
@@ -80,6 +80,10 @@ while True:
     elif x == 's':
         flag = 0
         f = open("spring.txt", 'r')
+        object_ascii.append(list(f.readline()))
+    elif x == 'c':
+        flag = 0
+        f = open("coin.txt", 'r')
         object_ascii.append(list(f.readline()))
     elif x == 'e':
         flag = 1

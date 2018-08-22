@@ -5,6 +5,7 @@ ACCEL = 10
 GROUND_POS = 22
 MAX_RIGHT = 45
 WIDTH = 510
+COIN_SCORE = 2
 
 class Character:
 	def __init__(self,x,y,life, art):
@@ -18,7 +19,7 @@ class Character:
 	def collision(self, final_background, x, y):
 		for i in range(x, x + len(self.art) - 1):
 			s = final_background[min(i, GROUND_POS)][y : min(y + len(self.art[0]) - 1, MAX_RIGHT + 10)]
-			if '|' in s or '_' in s:
+			if '|' in s or '_' in s or '~' in s:
 				return True
 		s = final_background[min(x + len(self.art) - 1, GROUND_POS)][y : min(y + len(self.art[0]) - 1, MAX_RIGHT + 10)]
 		if '|' in s:
@@ -40,24 +41,39 @@ class Character:
 	def jump(self,final_background):
 		rounded_x=int(round(self.x_pos))
 		rounded_y=int(round(self.y_pos))
-		if '_' in final_background[rounded_x + len(self.art) - 1][rounded_y : rounded_y + len(self.art[0]) - 1] and self.vel >= 0:
+
+		s = final_background[rounded_x + len(self.art) - 1][rounded_y : rounded_y + len(self.art[0]) - 1]
+		if ('_' in s or '~' in s )and self.vel >= 0:
 			self.vel = -((10*ACCEL)) ** (1/2.0)
+
 
 	def position_update(self,time_change,final_background):
 		rounded_x=int(round(self.x_pos))
 		rounded_y=int(round(self.y_pos))
-		print(rounded_x, rounded_y)
-		# print(final_background[rounded_x + len(self.art) - 1][rounded_y : rounded_y + len(self.art[0]) - 1])
-		if '_' in final_background[rounded_x + len(self.art) - 1][rounded_y : rounded_y + len(self.art[0]) - 1] and self.vel >= 0:
+		s = final_background[rounded_x + len(self.art) - 1][rounded_y : rounded_y + len(self.art[0]) - 1]
+		if '~' in s and self.vel >= 0:
+			self.vel = -1.2 * self.vel
+		elif '_' in s and self.vel >= 0:
 			self.vel = 0
 		else:
 			changed_x = int(round(self.x_pos + (self.vel * time_change) + (ACCEL * time_change * time_change * 0.5)))
+			if changed_x <= 0:
+				changed_x = 0
 			if not self.collision(final_background, changed_x, rounded_y):
 				self.x_pos = self.x_pos + (self.vel * time_change) + (ACCEL * time_change * time_change * 0.5)
+				if self.x_pos < 0:
+					self.x_pos = 0
+					self.vel = 0
 				self.vel = self.vel + ACCEL * time_change
-		if self.x_pos >= GROUND_POS:
-			self.x_pos = GROUND_POS
-			self.vel = 0
+		print(final_background[27][rounded_y : rounded_y + len(self.art[0]) - 1].count('-'))
+		if self.x_pos + len(self.art) - 1 > GROUND_POS and final_background[27][rounded_y : rounded_y + len(self.art[0]) - 1].count('-') != len(self.art[0]):
+			self.x_pos = GROUND_POS + 1 - len(self.art)
+			rounded_x = int(round(self.x_pos))
+			s = final_background[rounded_x + len(self.art) - 1][rounded_y : rounded_y + len(self.art[0]) - 1]
+			if '~' in s and self.vel >= 0:
+				self.vel = -1.2 * self.vel
+			else:
+				self.vel = 0
 
 class Mario(Character):
 	def __init__(self, x, y, life, art):
@@ -68,10 +84,16 @@ class Mario(Character):
 	def change_art(self, art):
 		self.art = art
 
-	def collision_check(self, enemies):
-		k = -1
+	def collision_check(self, enemies, background):
 		rounded_x = int(round(self.x_pos))
 		rounded_y = int(round(self.y_pos))
+		if '0' in background[rounded_x : rounded_x + len(self.art)][rounded_y : rounded_y + len(self.art[0])]:
+			self.score += COIN_SCORE
+
+		if self.x_pos >= 26:
+			self.life = 0
+			return
+		k = -1
 		for en in enemies:
 			k += 1
 			enemy_x = int(round(en.x_pos))
@@ -86,6 +108,13 @@ class Mario(Character):
 						self.score += 10/en.speed
 						del enemies[k]
 						break
+
+	def check_respawn(self):
+		if self.life == 0:
+			self.chances -= 1
+			self.life = 3
+			self.x_pos = 20
+			self.y_pos = 0
 
 class Enemy(Character):
 	def __init__(self, x, y, life, speed, move_to_left, art):

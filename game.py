@@ -6,7 +6,7 @@ from input import *
 import math
 
 	
-levelName = "temp"
+levelName = "background.txt"
 RESET = True
 HEIGHT = 29
 SCREEN_WIDTH = 85
@@ -56,13 +56,7 @@ def printBoard():
 	return final_board
 
 while RESET:
-
 	os.system('tput reset')
-	if mario.life == 0:
-		mario.chances -= 1
-		mario.life = 3
-		mario.x_pos = 20
-		mario.y_pos = 0
 
 	if mario.chances == 0:
 		break
@@ -88,7 +82,9 @@ while RESET:
 		mario.jump(arts.background)
 	time_change = time.time() - cur_time
 	mario.position_update(time_change,arts.background)
-	mario.collision_check(enemies)
+	mario.collision_check(enemies, arts.background)
+	mario.check_respawn()
 	cur_time = time.time()
 
 print("Game Over")
+print("Final Score ->",mario.score)
