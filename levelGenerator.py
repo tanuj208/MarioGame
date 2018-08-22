@@ -23,19 +23,22 @@ x_cor = 0
 y_cor = 0
 flag = 0
 
-def printt(object_ascii, x, y):
+def superimpose(object_ascii, x, y):
     final_background = copy.deepcopy(background)
     for i in range(len(object_ascii)):
         for j in range(len(object_ascii[0]) - 1):
             final_background[i + x][j + y] = object_ascii[i][j]
+    return final_background
+
+def printBoard(board, y):
     for i in range(HEIGHT):
         for j in range(SCREEN_WIDTH):
-            print(final_background[i][j + max(0, y - MAX_RIGHT)],end='')
+            print(board[i][j + max(0, y - MAX_RIGHT)],end='')
         print('')
-    return final_background
 
 while True:
     os.system('tput reset')
+    printBoard(background, 0)
     try:
         x = get_input(1)
         if x not in valid_inputs:
@@ -45,11 +48,6 @@ while True:
 
     if x == 'q':
         name = input()
-        if flag == 1:
-            f = open("enemies.txt",'a')
-            f.write(str(x_cor)+'\n')
-            f.write(str(y_cor)+'\n')
-            f.close()
         f = open(name, "w+")
         final = []
         for i in range(HEIGHT):
@@ -90,10 +88,10 @@ while True:
 
     x_cor = 0
     y_cor = 0
-    print(object_ascii)
     while True:
         os.system('tput reset')
-        final_background = printt(object_ascii, x_cor, y_cor)
+        final_background = superimpose(object_ascii, x_cor, y_cor)
+        printBoard(final_background, y_cor)
         try:
             y = get_input(1)
             if y not in direction_inputs:
@@ -109,5 +107,11 @@ while True:
         elif y == 'd':
             y_cor = min(y_cor + 1, WIDTH - len(object_ascii[0]))    
         elif y == 'q':
-            background = final_background
+            if flag == 1:
+                f = open("enemies.txt",'a')
+                f.write(str(x_cor)+'\n')
+                f.write(str(y_cor)+'\n')
+                f.close()
+            else:
+                background = final_background
             break
