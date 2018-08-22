@@ -1,7 +1,7 @@
 import time
 
 STANDARD_MOVE = 1
-ACCEL = 10
+ACCEL = 25
 GROUND_POS = 22
 MAX_RIGHT = 45
 WIDTH = 510
@@ -43,7 +43,7 @@ class Character:
 		rounded_y=int(round(self.y_pos))
 
 		s = final_background[rounded_x + len(self.art) - 1][rounded_y : rounded_y + len(self.art[0]) - 1]
-		if ('_' in s or '~' in s )and self.vel >= 0:
+		if ('_' in s or '~' in s) and self.vel >= 0:
 			self.vel = -((10*ACCEL)) ** (1/2.0)
 
 
@@ -65,8 +65,7 @@ class Character:
 					self.x_pos = 0
 					self.vel = 0
 				self.vel = self.vel + ACCEL * time_change
-		print(final_background[27][rounded_y : rounded_y + len(self.art[0]) - 1].count('-'))
-		if self.x_pos + len(self.art) - 1 > GROUND_POS and final_background[27][rounded_y : rounded_y + len(self.art[0]) - 1].count('-') != len(self.art[0]):
+		if self.x_pos + len(self.art) - 1 > GROUND_POS and final_background[27][rounded_y - 1 : rounded_y + len(self.art[0]) - 2].count('-') != len(self.art[0]) - 1:
 			self.x_pos = GROUND_POS + 1 - len(self.art)
 			rounded_x = int(round(self.x_pos))
 			s = final_background[rounded_x + len(self.art) - 1][rounded_y : rounded_y + len(self.art[0]) - 1]
@@ -90,7 +89,7 @@ class Mario(Character):
 		if '0' in background[rounded_x : rounded_x + len(self.art)][rounded_y : rounded_y + len(self.art[0])]:
 			self.score += COIN_SCORE
 
-		if self.x_pos >= 26:
+		if self.x_pos >= 25:
 			self.life = 0
 			return
 		k = -1

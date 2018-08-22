@@ -65,30 +65,33 @@ while True:
     if x == 'b':
         flag = 0
         f = open("brick.txt", 'r')
-        for i in range(2):
-            object_ascii.append(list(f.readline()))
+        for line in f.readlines():
+            object_ascii.append(list(line))
     elif x == 'p':
         flag = 0
         f = open("pit.txt", 'r')
-        for i in range(6):
-            object_ascii.append(list(f.readline()))
+        for line in f.readlines():
+            object_ascii.append(list(line))
     elif x == 'g':
         flag = 0
         f = open("groundObject.txt", 'r')
-        for i in range(3):
-            object_ascii.append(list(f.readline()))
+        for line in f.readlines():
+            object_ascii.append(list(line))
     elif x == 's':
         flag = 0
         f = open("spring.txt", 'r')
-        object_ascii.append(list(f.readline()))
+        for line in f.readlines():
+            object_ascii.append(list(line))
     elif x == 'c':
         flag = 0
         f = open("coin.txt", 'r')
-        object_ascii.append(list(f.readline()))
+        for line in f.readlines():
+            object_ascii.append(list(line))
     elif x == 'e':
         flag = 1
-        f = open("bumba.txt", 'r')
-        object_ascii.append(list(f.readline()))
+        f = open("enemy.txt", 'r')
+        for line in f.readlines():
+            object_ascii.append(list(line))
 
     x_cor = 0
     y_cor = 0

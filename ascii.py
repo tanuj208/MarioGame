@@ -7,24 +7,30 @@ class Arts:
 		self.background = []
 		self.small_mario = []
 		self.mario_character = []
-		self.bumba = []
+		self.enemy = []
+		self.missile = []
 
 	def make_background(self, level):
 		f = open(level, 'r')
-		for i in range(HEIGHT - 1):
-			self.background.append(list(f.readline()))
+		for line in f.readlines():
+			self.background.append(list(line))
 	
 	def make_small_mario(self):
 		f = open("small_mario.txt", 'r')
-		for i in range(3):
-			self.small_mario.append(f.readline())
+		for line in f.readlines():
+			self.small_mario.append(line)
 
 	def make_mario(self):
 		f = open("mario.txt", 'r')
-		for i in range(3):
-			self.mario_character.append(f.readline())
+		for line in f.readlines():
+			self.mario_character.append(line)
 
-	def make_bumba(self):
-		f = open("bumba.txt", 'r')
-		self.bumba.append(f.readline())
+	def make_enemy(self):
+		f = open("enemy.txt", 'r')
+		for line in f.readlines():
+			self.enemy.append(line)
 			
+	def make_missile(self):
+		f = open("missile.txt", 'r')
+		for line in f.readlines():
+			self.missile.append(line)
