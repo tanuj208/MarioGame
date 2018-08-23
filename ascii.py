@@ -1,14 +1,17 @@
 HEIGHT = 29
 WIDTH = 85
 
+def read(filename):
+	f = open(filename, 'r')
+	ascii_list = []
+	for line in f.readlines():
+		ascii_list.append(line)
+	return ascii_list
+
 class Arts:
 
 	def __init__(self):
 		self.background = []
-		self.small_mario = []
-		self.mario_character = []
-		self.enemy = []
-		self.missile = []
 
 	def make_background(self, level):
 		f = open(level, 'r')
@@ -16,21 +19,22 @@ class Arts:
 			self.background.append(list(line))
 	
 	def make_small_mario(self):
-		f = open("small_mario.txt", 'r')
-		for line in f.readlines():
-			self.small_mario.append(line)
+		self.small_mario = read("small_mario.txt")
 
 	def make_mario(self):
-		f = open("mario.txt", 'r')
-		for line in f.readlines():
-			self.mario_character.append(line)
+		self.mario_character = read("mario.txt")
+
+	def make_flyingEnemy(self):
+		self.flyingEnemy = read("flyingEnemy.txt")
 
 	def make_enemy(self):
-		f = open("enemy.txt", 'r')
-		for line in f.readlines():
-			self.enemy.append(line)
+		self.enemy = read("enemy.txt")
 			
+	def make_dragon(self):
+		self.dragon = read("dragon.txt")
+
 	def make_missile(self):
-		f = open("missile.txt", 'r')
-		for line in f.readlines():
-			self.missile.append(line)
+		self.missile = read("missile.txt")
+
+	def make_fire(self):
+		self.fire = read("fire.txt")
