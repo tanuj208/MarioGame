@@ -105,21 +105,30 @@ class Mario(Character):
 		k = -1
 		for en in enemies:
 			k += 1
+			broke = 0
 			enemy_x = int(round(en.x_pos))
 			enemy_y = int(round(en.y_pos))
-			for i in range(len(en.art[0])):
-				if enemy_y + i < rounded_y + len(self.art[0]) and enemy_y + i >= rounded_y:
-					if enemy_x >= rounded_x and enemy_x < rounded_x + len(self.art):
-						self.life -= 1
-						del enemies[k]
-						break
-					elif enemy_x == rounded_x + len(self.art):
-						if en.flying == 1:
-							self.score += 20/en.speed
-						else:
-							self.score += 10/en.speed
-						del enemies[k]
-						break
+			for i in range(len(en.art)):
+				for j in range(len(en.art[0])):
+					if enemy_y + i < rounded_y + len(self.art[0]) and enemy_y + i >= rounded_y:
+						if enemy_x + j >= rounded_x and enemy_x + j < rounded_x + len(self.art):
+							if en.dragon == 1:
+								self.life = 0
+								return
+							self.life -= 1
+							del enemies[k]
+							broke = 1
+							break
+						elif enemy_x == rounded_x + len(self.art):
+							if en.flying == 1:
+								self.score += 20/en.speed + 20 * en.max_life
+							else:
+								self.score += 10/en.speed + 20 * en.max_life
+							del enemies[k]
+							broke = 1
+							break
+				if broke == 1:
+					break
 
 	def changeForm(self, arts):
 		if self.life >= 2:

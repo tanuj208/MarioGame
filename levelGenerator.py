@@ -1,6 +1,7 @@
 import os
 import copy
 from input import *
+from ascii import *
 import time
 
 def openFile(filename, flag):
@@ -33,7 +34,7 @@ else:
 if flag == 'a':
     f, levelName = openFile(levelName, 'r')
 else:
-    f = openFile("background.txt", 'r')[0]
+    f = openFile("ascii/background.txt", 'r')[0]
 background = []
 HEIGHT = 28
 WIDTH = 423
@@ -43,12 +44,12 @@ for i in range(HEIGHT):
     background.append(list(f.readline()))
 f.close()
 
-f = openFile(levelName + "enemies.txt", flag)[0]
+f = openFile("enemyCoordinates/" + levelName + "enemies.txt", flag)[0]
 if flag == 'w+':
     f.write('')
 f.close()
 
-f = openFile(levelName + "flyingEnemies.txt", flag)[0]
+f = openFile("enemyCoordinates/" + levelName + "flyingEnemies.txt", flag)[0]
 if flag == 'w+':
     f.write('')
 f.close()
@@ -71,14 +72,6 @@ def printBoard(board, y):
         for j in range(SCREEN_WIDTH):
             print(board[i][j + max(0, y - MAX_RIGHT)],end='')
         print('')
-
-def get_ascii(filename):
-    f = open(filename, 'r')
-    object_ascii = []
-    for line in f.readlines():
-        object_ascii.append(list(line))
-    return object_ascii
-
 
 while True:
     os.system('tput reset')
@@ -112,26 +105,24 @@ while True:
     flag = 0
     object_ascii = []
     if x == 'b':
-        object_ascii = get_ascii("brick.txt")
+        object_ascii = arts.brick
     elif x == 'p':
-        object_ascii = get_ascii("pit.txt")
+        object_ascii = arts.pit
     elif x == 'g':
-        object_ascii = get_ascii("groundObject.txt")
+        object_ascii = arts.groundObject
     elif x == 's':
-        object_ascii = get_ascii("spring.txt")
+        object_ascii = arts.spring
     elif x == 'c':
-        object_ascii = get_ascii("coin.txt")
+        object_ascii = arts.coin
     elif x == 'o':
-        object_ascii = get_ascii("powerUp.txt")
+        object_ascii = arts.powerUp
     elif x == 'f':
         flag = 2
-        object_ascii = get_ascii("flyingEnemy.txt")
+        object_ascii = arts.flyingEnemy
     elif x == 'e':
         flag = 1
-        object_ascii = get_ascii("enemy.txt")
+        object_ascii = arts.enemy
 
-    # x_cor = 0
-    # y_cor = 0
     while True:
         os.system('tput reset')
         print("Input instructions\nw->move up a->move left s->move down d->move right q->save and quit m->do not save and quit")
@@ -155,9 +146,9 @@ while True:
             y_cor = min(y_cor + 1, WIDTH - len(object_ascii[0]))    
         elif y == 'q':
             if flag == 1:
-                f = open(levelName + "enemies.txt", 'a')
+                f = open("enemyCoordinates/" + levelName + "enemies.txt", 'a')
             elif flag == 2:
-                f = open(levelName + "flyingEnemies.txt", 'a')
+                f = open("enemyCoordinates/" + levelName + "flyingEnemies.txt", 'a')
             if flag == 1 or flag == 2:
                 f.write(str(x_cor)+'\n')
                 f.write(str(y_cor)+'\n')
