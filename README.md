@@ -2,6 +2,8 @@
 
 ## Introduction
 
+A game similar to popular game Mario
+
 This game has been written using _almost_ Vanilla Python. Important to note that the game has been tested on **ONLY** Linux-based OSs, and _may not_ work on Windows.
 
 ## Structure
