@@ -9,23 +9,18 @@ This game has been written using _almost_ Vanilla Python. Important to note that
 ## Structure
 
 The application demonstrates inheritance, encapsulation, polymorphism and abstraction.
-<!-- - Each "object" is a derived class of the `Object` class. -->
 - Each player/enemy is a derived class of the `Character` class.
 - The `board` has its own class and and captures all objects placed on it.
 
 ## Running the program
 
-- First, install all the requirements:
-	- `pip install -r requirements.txt`
-- Now, simply replace the first line of `main.py` with the location of your python installation
-	- `#!/usr/bin/env python`
-- Running the program is easy
-	- `./main.py`
+- Go into the respective directory
+	- `./game.py`
 
 ## Controls
 
 - Controls follow traditional classic titles (W,S,A,D)
-- To drop a bomb press `b`
+- To fire `f`
 - To quit, press `q`
 
 ## File Structure
