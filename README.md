@@ -44,11 +44,11 @@ The application demonstrates inheritance, encapsulation, polymorphism and abstra
 ## File Structure
 
 .
- * [game.py](./__init__.py)
- * [input.py](./people.py)
- * [characters.py](./config.py)
- * [ascii.py](./objects.py)
+ * [game.py](./game.py)
+ * [input.py](./input.py)
+ * [characters.py](./characters.py)
+ * [ascii.py](./ascii.py)
  * [board.py](./board.py)
- * [missiles.py](./main.py)
+ * [missiles.py](./missiles.py)
  * [levelGenerator.py](./levelGenerator.py)
  * [README.md](./README.md)
