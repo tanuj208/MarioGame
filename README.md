@@ -43,7 +43,6 @@ The application demonstrates inheritance, encapsulation, polymorphism and abstra
 
 ## File Structure
 
-.
  * [game.py](./game.py)
  * [input.py](./input.py)
  * [characters.py](./characters.py)
